@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -45,7 +46,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="dont have account?"
+            android:text="dont have any account?"
+            android:padding="8dp"
             android:id="@+id/textView" />
 
         <TextView
@@ -53,6 +55,7 @@
             android:layout_height="wrap_content"
             android:text="register here"
             android:textStyle="bold"
+            android:padding="8dp"
             android:id="@+id/textView2" />
     </LinearLayout>
 </LinearLayout>
