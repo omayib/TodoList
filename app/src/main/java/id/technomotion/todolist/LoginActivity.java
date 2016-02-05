@@ -18,17 +18,15 @@ public class LoginActivity extends AppCompatActivity {
     TextView textViewRegister;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        setupView();
     }
 
     private void setupView() {
-        editTextEmail= (EditText) findViewById(R.id.editText);
-        editTextPassword= (EditText) findViewById(R.id.editText2);
-        buttonLogin= (Button) findViewById(R.id.button);
-        textViewRegister= (TextView) findViewById(R.id.textView2);
+        editTextEmail= (EditText) findViewById(R.id.editTextEmail);
+        editTextPassword= (EditText) findViewById(R.id.editTextPassword);
+        buttonLogin= (Button) findViewById(R.id.buttonLoagin);
+        textViewRegister= (TextView) findViewById(R.id.textViewRegister);
     }
 }
