@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,AddItemActivity.class));
+                Intent intent=new Intent(MainActivity.this,AddItemActivity.class);
+                startActivityForResult(intent,333);
             }
         });
     }
@@ -54,5 +55,17 @@ public class MainActivity extends AppCompatActivity {
         todosAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,todos);
 
         listView.setAdapter(todosAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(RESULT_OK==resultCode && requestCode==333){
+            String item=data.getStringExtra("item");
+            todos.add(item);
+            todosAdapter.notifyDataSetChanged();
+        }else{
+            Snackbar.make(listView,"cancel",Snackbar.LENGTH_SHORT).show();
+        }
     }
 }
