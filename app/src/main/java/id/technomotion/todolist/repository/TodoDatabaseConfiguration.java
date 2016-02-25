@@ -3,13 +3,12 @@ package id.technomotion.todolist.repository;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by omayib on 25/02/16.
  */
-public class TodoDatabase extends SQLiteOpenHelper {
-    private static final String TAG = "TodoDatabase";
+public class TodoDatabaseConfiguration extends SQLiteOpenHelper {
+    private static final String TAG = "TodoDatabaseConfiguration";
     public static final String DATABASE_NAME="todo.db";
     public static final int DATABSE_VERSION=1;
 
@@ -25,14 +24,12 @@ public class TodoDatabase extends SQLiteOpenHelper {
     private final String CREATE_TABLE =String.format(QUERY_CREATE,TABLE_NAME,COLUMN_ID,COLUMN_ITEM,COLUMN_TIMESTAMP,COLUMN_SYNCHRONIZED);
     private final String DROP_TABLE=String.format(QUERY_DROP_TABLE,TABLE_NAME);
 
-    public TodoDatabase(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public TodoDatabaseConfiguration(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        Log.d(TAG, "onCreate: ");
-
         sqLiteDatabase.execSQL(CREATE_TABLE);
     }
 

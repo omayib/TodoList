@@ -21,6 +21,7 @@ import java.util.UUID;
 import id.technomotion.todolist.R;
 import id.technomotion.todolist.TodoApplication;
 import id.technomotion.todolist.model.Todo;
+import id.technomotion.todolist.repository.TodoLocalRepository;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<Todo> todoAdapter;
     List<Todo> todos;
     TodoApplication app;
+    TodoLocalRepository repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
         app= (TodoApplication) getApplication();
 
         app.getTodoLocalRepository().open();
-        todos=app.getTodoLocalRepository().getAllItems();
+        repo=app.getTodoLocalRepository();
+        todos=repo.findAll();
 
         setupView();
 
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processToDelete(Todo todoItem) {
-        app.getTodoLocalRepository().deleteItem(todoItem.id);
+        repo.delete(todoItem.id);
         todos.remove(todoItem);
         todoAdapter.notifyDataSetChanged();
     }
@@ -114,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onActivityResult:requestCode "+requestCode);
         if(resultCode==RESULT_OK&& requestCode==212){
             Todo newTodo=new Todo(UUID.randomUUID().toString(),data.getStringExtra("item"));
-            app.getTodoLocalRepository().addItem(newTodo);
+            repo.insert(newTodo);
             todos.add(newTodo);
             todoAdapter.notifyDataSetChanged();
         }
         if(resultCode==RESULT_OK && requestCode==213){
             Todo todoUpdated=new Todo(data.getStringExtra("id"),data.getStringExtra("item"));
-            app.getTodoLocalRepository().updateItem(todoUpdated.item,todoUpdated.id);
+            repo.update(todoUpdated.item, todoUpdated.id);
             if(todos.contains(todoUpdated)){
                 todos.set(todos.indexOf(todoUpdated),todoUpdated);
                 todoAdapter.notifyDataSetChanged();

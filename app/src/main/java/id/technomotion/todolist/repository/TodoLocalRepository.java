@@ -17,13 +17,13 @@ import id.technomotion.todolist.model.Todo;
 public class TodoLocalRepository {
     private static final String TAG = "TodoLocalRepository";
     private SQLiteDatabase database;
-    private TodoDatabase todoDatabase;
-    private String[] allColumn=new String[]{TodoDatabase.COLUMN_ID,TodoDatabase.COLUMN_ITEM,
-            TodoDatabase.COLUMN_SYNCHRONIZED,TodoDatabase.COLUMN_TIMESTAMP};
+    private TodoDatabaseConfiguration todoDatabase;
+    private String[] allColumn=new String[]{TodoDatabaseConfiguration.COLUMN_ID, TodoDatabaseConfiguration.COLUMN_ITEM,
+            TodoDatabaseConfiguration.COLUMN_SYNCHRONIZED, TodoDatabaseConfiguration.COLUMN_TIMESTAMP};
 
     public TodoLocalRepository(Context context){
-        todoDatabase =new TodoDatabase(context, TodoDatabase.DATABASE_NAME,
-                null, TodoDatabase.DATABSE_VERSION);
+        todoDatabase =new TodoDatabaseConfiguration(context, TodoDatabaseConfiguration.DATABASE_NAME,
+                null, TodoDatabaseConfiguration.DATABSE_VERSION);
     }
     public void open(){
         database= todoDatabase.getWritableDatabase();
@@ -32,15 +32,21 @@ public class TodoLocalRepository {
         todoDatabase.close();
     }
 
-    public void addItem(Todo itemTodo){
+    public void insert(Todo itemTodo){
         ContentValues cv=new ContentValues();
-        cv.put(TodoDatabase.COLUMN_ITEM,itemTodo.item);
-        cv.put(TodoDatabase.COLUMN_ID, itemTodo.id);
-        database.insert(TodoDatabase.TABLE_NAME,null,cv);
+        cv.put(TodoDatabaseConfiguration.COLUMN_ITEM,itemTodo.item);
+        cv.put(TodoDatabaseConfiguration.COLUMN_ID, itemTodo.id);
+        database.insert(TodoDatabaseConfiguration.TABLE_NAME, null, cv);
     }
-    public List<Todo> getAllItems(){
+    public Todo find(Todo todo){
+        Cursor cursor=database.query(TodoDatabaseConfiguration.TABLE_NAME,allColumn,
+                TodoDatabaseConfiguration.COLUMN_ID+"=\""+todo.id+"\"",null,null,null,null);
+        cursor.moveToNext();
+        return new Todo(cursor.getString(0),cursor.getString(1));
+    }
+    public List<Todo> findAll(){
         List<Todo> todos=new ArrayList<>();
-        Cursor cursor=database.query(TodoDatabase.TABLE_NAME, allColumn, null, null, null, null, null);
+        Cursor cursor=database.query(TodoDatabaseConfiguration.TABLE_NAME, allColumn, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             Todo todo=new Todo(cursor.getString(0),cursor.getString(1));
@@ -51,15 +57,15 @@ public class TodoLocalRepository {
         return todos;
 
     }
-    public void deleteItem(String id){
-        int deletedStatus=database.delete(TodoDatabase.TABLE_NAME, TodoDatabase.COLUMN_ID+"=\""+id+"\"", null);
-        Log.d(TAG, "deleteItem: statuscode " +deletedStatus);
+    public void delete(String id){
+        int deletedStatus=database.delete(TodoDatabaseConfiguration.TABLE_NAME, TodoDatabaseConfiguration.COLUMN_ID+"=\""+id+"\"", null);
+        Log.d(TAG, "delete: statuscode " +deletedStatus);
     }
-    public void updateItem(String item, String id){
-        Log.d(TAG, "updateItem() called with: " + "item = [" + item + "], id = [" + id + "]");
+    public void update(String item, String id){
+        Log.d(TAG, "update() called with: " + "item = [" + item + "], id = [" + id + "]");
         ContentValues cv=new ContentValues();
-        cv.put(TodoDatabase.COLUMN_ITEM, item);
-        int updateStatusCode=database.update(TodoDatabase.TABLE_NAME,cv,TodoDatabase.COLUMN_ID+"=\""+id+"\"",null);
-        Log.d(TAG, "updateItem: updateStatusCode : "+updateStatusCode);
+        cv.put(TodoDatabaseConfiguration.COLUMN_ITEM, item);
+        int updateStatusCode=database.update(TodoDatabaseConfiguration.TABLE_NAME,cv, TodoDatabaseConfiguration.COLUMN_ID+"=\""+id+"\"",null);
+        Log.d(TAG, "update: updateStatusCode : "+updateStatusCode);
     }
 }
