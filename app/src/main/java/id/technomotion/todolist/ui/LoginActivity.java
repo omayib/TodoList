@@ -1,4 +1,4 @@
-package id.technomotion.todolist;
+package id.technomotion.todolist.ui;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import id.technomotion.todolist.R;
 
 /**
  * Created by omayib on 05/02/16.
