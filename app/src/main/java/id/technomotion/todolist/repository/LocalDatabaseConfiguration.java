@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Created by omayib on 25/02/16.
  */
-public class TodoDatabaseConfiguration extends SQLiteOpenHelper {
-    private static final String TAG = "TodoDatabaseConfiguration";
+public class LocalDatabaseConfiguration extends SQLiteOpenHelper {
+    private static final String TAG = "LocalDatabaseConfiguration";
     public static final String DATABASE_NAME="todo.db";
     public static final int DATABSE_VERSION=1;
 
@@ -24,7 +24,7 @@ public class TodoDatabaseConfiguration extends SQLiteOpenHelper {
     private final String CREATE_TABLE =String.format(QUERY_CREATE,TABLE_NAME,COLUMN_ID,COLUMN_ITEM,COLUMN_TIMESTAMP,COLUMN_SYNCHRONIZED);
     private final String DROP_TABLE=String.format(QUERY_DROP_TABLE,TABLE_NAME);
 
-    public TodoDatabaseConfiguration(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public LocalDatabaseConfiguration(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 

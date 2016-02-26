@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,20 +18,20 @@ import java.util.List;
 import java.util.UUID;
 
 import id.technomotion.todolist.R;
-import id.technomotion.todolist.TodoApplication;
+import id.technomotion.todolist.application.TodoApplication;
 import id.technomotion.todolist.model.Todo;
-import id.technomotion.todolist.repository.TodoLocalRepository;
+import id.technomotion.todolist.repository.TodoRepository;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    FloatingActionButton fab;
-    ListView listView;
-    Toolbar toolbar;
-    ArrayAdapter<Todo> todoAdapter;
-    List<Todo> todos;
-    TodoApplication app;
-    TodoLocalRepository repo;
+    private FloatingActionButton fab;
+    private ListView listView;
+    private Toolbar toolbar;
+    private ArrayAdapter<Todo> todoAdapter;
+    private List<Todo> todos;
+    private TodoApplication app;
+    private TodoRepository repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         app= (TodoApplication) getApplication();
 
-        app.getTodoLocalRepository().open();
-        repo=app.getTodoLocalRepository();
+        app.getRepository().open();
+        repo=app.getRepository();
         todos=repo.findAll();
 
         setupView();
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processToDelete(Todo todoItem) {
-        repo.delete(todoItem.id);
+        repo.delete(todoItem);
         todos.remove(todoItem);
         todoAdapter.notifyDataSetChanged();
     }
@@ -114,16 +113,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult:requestCode "+requestCode);
         if(resultCode==RESULT_OK&& requestCode==212){
+            //create new todo object
             Todo newTodo=new Todo(UUID.randomUUID().toString(),data.getStringExtra("item"));
+            //insert todo object into database
             repo.insert(newTodo);
+            //update the UI
             todos.add(newTodo);
             todoAdapter.notifyDataSetChanged();
         }
         if(resultCode==RESULT_OK && requestCode==213){
+            //create new todo object
             Todo todoUpdated=new Todo(data.getStringExtra("id"),data.getStringExtra("item"));
-            repo.update(todoUpdated.item, todoUpdated.id);
+            //update the existing todo item
+            repo.update(todoUpdated);
+            //get existing todo item from listview then update the value based on index
             if(todos.contains(todoUpdated)){
                 todos.set(todos.indexOf(todoUpdated),todoUpdated);
                 todoAdapter.notifyDataSetChanged();
